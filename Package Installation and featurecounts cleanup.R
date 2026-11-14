@@ -58,9 +58,7 @@ sample_names <- c(
 colnames(counts)[7:ncol(counts)] <- sample_names
 
 counts_clean <- counts |>
-  dplyr::select(-Chr, -Start, -End, -Strand, -Length)|>
-  column_to_rownames('Geneid')|>
-  as.matrix()
+  dplyr::select(-Chr, -Start, -End, -Strand, -Length)
 
 #export into a nice csv for downstream use
-write.csv(counts_clean, 'read_counts/tidy/count_matrix.csv')
+write_csv(counts_clean, 'read_counts/tidy/count_matrix.csv')

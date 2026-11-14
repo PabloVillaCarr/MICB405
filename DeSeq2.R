@@ -1,7 +1,7 @@
 library(DESeq2)
 library(tidyverse)
-library(ComplexHeatmap)
-library(biomaRt)
+library(pheatmap)
+library(RColorBrewer)
 library(EnhancedVolcano)
 
 #load read count matrix
@@ -43,5 +43,87 @@ dds <- DESeq(dds_matrix)
 
 ###At this stage the DeSeq2 part is done
 
+##################################################################################
+
+
 #PCA analysis
+rld <- rlog(dds) #begin by log transforming the count data
+
+PCA_general_Data <- plotPCA(rld,
+                            intgroup = c("infection", 'light', 'time'),
+                            ntop = 500,
+                            returnData = TRUE)
+
+#extract percent variation explained of each axis of the PCA data object
+percentVar <- round(100 * attr(PCA_general_Data, "percentVar"))
+glimpse(percentVar)
+
+#make the actual plot with ggplot
+
+PCA_general_plot <- PCA_general_Data|>
+  ggplot(aes(x = PC1, y = PC2, colour = group, shape = infection))+
+  geom_point()+
+  xlab(paste0("PC1: ",percentVar[1],"% variance")) + 
+  ylab(paste0("PC2: ",percentVar[2],"% variance"))
+
+PCA_general_plot
+
+ggsave('plots/QC/PCA_general_plot.png', plot = PCA_general)
+
+
+
+################################################################################
+
+#Make a heatmap of the distances from sample to sample
+
+# Calculate distances between samples in our log-transformed data
+sample_dists <- dist(t(assay(rld)))
+
+# Convert the output to a matrix
+sample_dist_matrix <- as.matrix(sample_dists)
+
+# Remove the column names of our matrix
+colnames(sample_dist_matrix) <- NULL
+
+# Set the colour palette for our heatmap
+colours <- colorRampPalette(rev(brewer.pal(9, "Purples")))(255)
+
+# Generate a heatmap using the pheatmap package
+sampledist_heatmap <- pheatmap(sample_dist_matrix,
+         clustering_distance_rows = sample_dists,
+         clustering_distance_cols = sample_dists, 
+         col = colours)
+
+ggsave('plots/QC/sampledist_heatmap.png', plot = sampledist_heatmap)
+
+
+###########################################################################
+#Plotting a Z-score heatmap on all genes and on highly variant genes
+vsd <- assay(vst(dds)) #normalization and transformation for variance
+
+Z_scores <- t(scale(t(vsd)))|>
+  na.omit()#calculate Z scores and omit NA values
+
+#plot pheatmap for all genes
+ZscoreHeatmap_general <- pheatmap(Z_scores, main = "Zscore analysis")
+ZscoreHeatmap_general
+
+ggsave('plots/Z-scores/Zscore_allgenes_allsamples.png', plot= ZscoreHeatmap_general)
+#extract all the rows with the highest variation
+topVarGenes <- rowVars(vsd) |>
+  order(decreasing = TRUE) |>
+  head(50) #chose the TOP50 most variant genes (roughly 5% of the genome)
+
+#subset the Zscore matrix for the rows we want
+Z_TopGenes <- Z_scores[topVarGenes,]
+
+#plot pheatmap of top 50 genes
+
+ZscoreHeatmap_top50 <-pheatmap(Z_TopGenes,
+                               main = "Z-score top 100",
+                               cluster_cols = FALSE) # I turned off the clustering of groups
+ZscoreHeatmap_top50
+
+ggsave('plots/Z-scores/Zscore_top50genes_allsamples.png', plot= ZscoreHeatmap_top50)
+
 
