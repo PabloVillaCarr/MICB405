@@ -68,7 +68,7 @@ PCA_general_plot <- PCA_general_Data|>
 
 PCA_general_plot
 
-ggsave('plots/QC/PCA_general_plot.png', plot = PCA_general)
+ggsave('plots/QC/PCA_general_plot.png', plot = PCA_general_plot)
 
 
 
@@ -120,7 +120,7 @@ Z_TopGenes <- Z_scores[topVarGenes,]
 #plot pheatmap of top 50 genes
 
 ZscoreHeatmap_top50 <-pheatmap(Z_TopGenes,
-                               main = "Z-score top 100",
+                               main = "Z-score top 50",
                                cluster_cols = FALSE) # I turned off the clustering of groups
 ZscoreHeatmap_top50
 
