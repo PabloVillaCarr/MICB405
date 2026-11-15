@@ -28,11 +28,7 @@
 
 
 #Open libraries
-library(DESeq2)
 library(tidyverse)
-library(ComplexHeatmap)
-library(biomaRt)
-library(EnhancedVolcano)
 
 counts <- read_tsv('read_counts/counts.txt', skip = 1)
 
@@ -58,7 +54,19 @@ sample_names <- c(
 colnames(counts)[7:ncol(counts)] <- sample_names
 
 counts_clean <- counts |>
-  dplyr::select(-Chr, -Start, -End, -Strand, -Length)
+  dplyr::select(-Chr, -Start, -End, -Strand, -Length) #all samples
 
+counts_clean_nodark <- counts_clean|>
+  select(-infected_Dark_0h_1,
+         -infected_Dark_0h_2,
+         -infected_Dark_0h_3,
+         -infected_Dark_4h_1,
+         -infected_Dark_4h_2,
+         -infected_Dark_4h_3,
+         -infected_Dark_8h_1,
+         -infected_Dark_8h_2,
+         -infected_Dark_8h_3)
 #export into a nice csv for downstream use
 write_csv(counts_clean, 'read_counts/tidy/count_matrix.csv')
+
+write_csv(counts_clean_nodark, 'read_counts/tidy/count_matrix_nodark.csv')
