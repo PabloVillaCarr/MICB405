@@ -61,8 +61,9 @@ glimpse(percentVar)
 #make the actual plot with ggplot
 
 PCA_general_plot <- PCA_general_Data|>
-  ggplot(aes(x = PC1, y = PC2, colour = group, shape = infection))+
+  ggplot(aes(x = PC1, y = PC2, colour = light, shape = infection))+
   geom_point()+
+  facet_grid(vars(time))+
   xlab(paste0("PC1: ",percentVar[1],"% variance")) + 
   ylab(paste0("PC2: ",percentVar[2],"% variance"))
 
@@ -124,4 +125,4 @@ ZscoreHeatmap_top50 <-pheatmap(Z_TopGenes,
                                cluster_cols = FALSE) # I turned off the clustering of groups
 ZscoreHeatmap_top50
 
-ggsave('plots/Z-scores/Zscore_top50genes_nodark.png', plot= ZscoreHeatmap_top50)
+ggsave('plots/Z-scores/Zscore_top50genes_nodark.png', plot= ZscoreHeatmap_top50, height = 10)
