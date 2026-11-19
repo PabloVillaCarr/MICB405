@@ -66,7 +66,19 @@ counts_clean_nodark <- counts_clean|>
          -infected_Dark_8h_1,
          -infected_Dark_8h_2,
          -infected_Dark_8h_3)
+
+#for high light at 4 hours
+counts_clean_h4h <- counts_clean|>
+  select(Geneid,
+         control_High_Light_4h_1,
+         control_High_Light_4h_2,
+         control_High_Light_4h_3,
+         infected_High_Light_4h_1,
+         infected_High_Light_4h_2,
+         infected_High_Light_4h_3)
 #export into a nice csv for downstream use
 write_csv(counts_clean, 'read_counts/tidy/count_matrix.csv')
 
 write_csv(counts_clean_nodark, 'read_counts/tidy/count_matrix_nodark.csv')
+
+write_csv(counts_clean_h4h, 'read_counts/tidy/count_matrix_h4h.csv')
