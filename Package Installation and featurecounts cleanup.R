@@ -66,6 +66,17 @@ counts_clean_nodark <- counts_clean|>
          -infected_Dark_8h_1,
          -infected_Dark_8h_2,
          -infected_Dark_8h_3)
+counts_clean_dark <- counts_clean|>
+  select(Geneid,
+         infected_Dark_0h_1,
+         infected_Dark_0h_2,
+         infected_Dark_0h_3,
+         infected_Dark_4h_1,
+         infected_Dark_4h_2,
+         infected_Dark_4h_3,
+         infected_Dark_8h_1,
+         infected_Dark_8h_2,
+         infected_Dark_8h_3)
 
 #for high light at 4 hours
 counts_clean_h4h <- counts_clean|>
@@ -82,3 +93,6 @@ write_csv(counts_clean, 'read_counts/tidy/count_matrix.csv')
 write_csv(counts_clean_nodark, 'read_counts/tidy/count_matrix_nodark.csv')
 
 write_csv(counts_clean_h4h, 'read_counts/tidy/count_matrix_h4h.csv')
+
+write_csv(counts_clean_dark, 'read_counts/tidy/count_matrix_dark.csv')
+

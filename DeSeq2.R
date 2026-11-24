@@ -126,6 +126,6 @@ ZscoreHeatmap_top50 <-pheatmap(Z_TopGenes,
                                cluster_cols = FALSE) # I turned off the clustering of groups
 ZscoreHeatmap_top50
 
-ggsave('plots/Z-scores/Zscore_top50genes_allsamples.png', plot= ZscoreHeatmap_top50, height = 10)
+ggsave('plots/Z-scores/Zscore_top50genes_allsamples.pdf', plot= ZscoreHeatmap_top50, height = 10)
 
 
